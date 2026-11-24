@@ -42,6 +42,23 @@ const restartBtn = document.getElementById('restart-btn');
 
 let board, current, next, score, lines, level, paused, gameOver, lastTime, dropAccum, dropInterval, animId;
 
+// Nivel inicial elegido en el menú de pausa (1-10), persistido en localStorage.
+let startLevel = loadStartLevel();
+// Tecla que cerró el menú de pausa: se ignora hasta que se suelte.
+let swallowKey = null;
+
+function loadStartLevel() {
+  try {
+    const v = parseInt(localStorage.getItem('tetris.startLevel'), 10);
+    if (v >= 1 && v <= 10) return v;
+  } catch (e) { /* sin localStorage */ }
+  return 1;
+}
+
+function intervalForLevel(lv) {
+  return Math.max(100, 1000 - (lv - 1) * 90);
+}
+
 function createBoard() {
   return Array.from({ length: ROWS }, () => new Array(COLS).fill(0));
 }
@@ -106,8 +123,8 @@ function clearLines() {
   if (cleared) {
     lines += cleared;
     score += (LINE_SCORES[cleared] || 0) * level;
-    level = Math.floor(lines / 10) + 1;
-    dropInterval = Math.max(100, 1000 - (level - 1) * 90);
+    level = startLevel + Math.floor(lines / 10);
+    dropInterval = intervalForLevel(level);
     updateHUD();
   }
 }
@@ -230,13 +247,14 @@ function togglePause() {
   if (gameOver) return;
   paused = !paused;
   if (!paused) {
+    if (typeof hidePauseMenu === 'function') hidePauseMenu();
+    dropAccum = 0;
     lastTime = performance.now();
-    loop(lastTime);
+    cancelAnimationFrame(animId);
+    animId = requestAnimationFrame(loop);
   } else {
     cancelAnimationFrame(animId);
-    overlayTitle.textContent = 'PAUSA';
-    overlayScore.textContent = '';
-    overlay.classList.remove('hidden');
+    if (typeof showPauseMenu === 'function') showPauseMenu();
   }
 }
 
@@ -260,23 +278,29 @@ function init() {
   board = createBoard();
   score = 0;
   lines = 0;
-  level = 1;
+  level = startLevel;
+  swallowKey = null;
   paused = false;
   gameOver = false;
-  dropInterval = 1000;
+  dropInterval = intervalForLevel(level);
   dropAccum = 0;
   lastTime = performance.now();
   next = randomPiece();
   spawn();
   updateHUD();
   overlay.classList.add('hidden');
+  if (typeof hidePauseMenu === 'function') hidePauseMenu(); // pause.js carga después
   cancelAnimationFrame(animId);
   animId = requestAnimationFrame(loop);
 }
 
 document.addEventListener('keydown', e => {
-  if (e.code === 'KeyP') { togglePause(); return; }
+  if (e.code === 'KeyP' || e.code === 'Escape') {
+    if (!e.repeat) togglePause();
+    return;
+  }
   if (paused || gameOver) return;
+  if (e.code === swallowKey) return;
   switch (e.code) {
     case 'ArrowLeft':
       if (!collide(current.shape, current.x - 1, current.y)) current.x--;
@@ -297,6 +321,10 @@ document.addEventListener('keydown', e => {
       break;
   }
   updateHUD();
+});
+
+document.addEventListener('keyup', e => {
+  if (e.code === swallowKey) swallowKey = null;
 });
 
 restartBtn.addEventListener('click', init);
