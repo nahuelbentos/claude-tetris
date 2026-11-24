@@ -5,8 +5,9 @@
 }
 
 body {
-  background: #0f0f17;
+  background: var(--page-bg, #0f0f17);
   color: #e0e0e0;
+  transition: background 0.2s;
   font-family: system-ui, -apple-system, sans-serif;
   display: flex;
   align-items: center;
@@ -28,7 +29,7 @@ body {
 #board {
   display: block;
   border: 1px solid #2a2a3a;
-  background: #1a1a25;
+  background: var(--board-bg, #1a1a25);
   border-radius: 4px;
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
 }
@@ -66,8 +67,24 @@ body {
 #next-canvas {
   display: block;
   border: 1px solid #2a2a3a;
-  background: #1a1a25;
+  background: var(--board-bg, #1a1a25);
   border-radius: 4px;
+}
+
+#skin-select {
+  background: #22223a;
+  color: #e0e0e0;
+  border: 1px solid #3a3a5a;
+  border-radius: 4px;
+  padding: 4px 6px;
+  font-size: 12px;
+}
+
+body[data-skin="pastel"] .label,
+body[data-skin="pastel"] .value,
+body[data-skin="pastel"] kbd,
+body[data-skin="pastel"] .controls li {
+  color: #6b5b7b;
 }
 
 /* ---- Controles ---- */
