@@ -150,3 +150,129 @@ kbd {
 #restart-btn:hover {
   background: #9bbdff;
 }
+
+/* ---- Records / pantalla de inicio ---- */
+#start-screen {
+  z-index: 2;
+  background: rgba(10, 10, 20, 0.92);
+}
+
+#start-title {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: 6px;
+  color: #7aa2f7;
+}
+
+.btn {
+  background: #7aa2f7;
+  color: #0f0f17;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 28px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: background 0.15s;
+}
+
+.btn:hover {
+  background: #9bbdff;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #888;
+  border: 1px solid #3a3a5a;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  color: #e57373;
+  border-color: #e57373;
+}
+
+#records-gameover {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+#records-gameover.hidden,
+.badge.hidden,
+#name-form.hidden {
+  display: none;
+}
+
+.badge {
+  color: #ffd54f;
+  font-weight: 800;
+  letter-spacing: 2px;
+  font-size: 14px;
+}
+
+#name-form {
+  display: flex;
+  gap: 8px;
+}
+
+#name-input {
+  width: 130px;
+  background: #1a1a25;
+  border: 1px solid #3a3a5a;
+  border-radius: 6px;
+  color: #e0e0e0;
+  padding: 6px 10px;
+  font-size: 14px;
+  user-select: text;
+}
+
+#name-input:focus {
+  outline: none;
+  border-color: #7aa2f7;
+}
+
+.records-table {
+  border-collapse: collapse;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
+  color: #aaa;
+}
+
+.records-table th {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: #555570;
+  font-weight: 600;
+  padding: 2px 8px;
+}
+
+.records-table td {
+  padding: 2px 8px;
+  text-align: right;
+}
+
+.records-table td.name {
+  text-align: left;
+}
+
+.records-table tr.current {
+  background: rgba(122, 162, 247, 0.2);
+  color: #7aa2f7;
+  font-weight: 700;
+}
+
+.records-empty {
+  font-size: 12px;
+  color: #666;
+}
+
+.records-stats {
+  font-size: 12px;
+  color: #888;
+}
